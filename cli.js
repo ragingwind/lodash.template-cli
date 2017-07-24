@@ -10,36 +10,59 @@ const isPathInside = require('is-path-inside')
 const PQueue = require('p-queue')
 const fs = require('mz/fs')
 const makeDir = require('make-dir')
+const camelcase = require('camelcase')
 
 const cli = meow(`
 	Usage
-		$ ltpl [src] [dest] [data-props.json] <data-options>
+		$ tpl [src] [dest] <data-json> -- [data-strings]
 
-	Data Options
-		--anyVariableForTemplate
+	src, path, path with glob pattern and glob patterns
+		eg) ./src/index.tpl, ./src/**, './src/**'
+
+	dest, path for output
+		eg) ./dist
+
+	data-json, 'optional, has data properties, must be before '--'
+		--data='path of data.json'
+
+	data-string, must be after '--', individual data property
+		--ANY-DATA-STRING-NAME=[value]
 
 	Examples
-		$ ltpl ./src ./dist --name='My Name' --target='Target'
-		$ ltpl ./src ./dist ./variables.json
-		$ ltpl ./src ./dist ./variables.json --name-overwrite='My Name' --target-overwrite='Target'
-`)
-
-if (cli.input.length < 1) {
-	throw new TypeError('Invalid source path')
-}
-
-const src = Array.isArray(cli.input[0]) ? cli.input[0] : [cli.input[0]]
-const dest = cli.input.length > 1 ? cli.input[1] : './'
-const dataFile = cli.input.length > 2 && /.json$/.test(cli.input[2]) ?
-							cli.input[2] : undefined
-const job = new PQueue({concurrency: 4})
-
-job.onEmpty().then(() => {
-	console.log('done')
+		$ tpl ./src/index.html ./dist -- --name='My Name' --target='Target'
+		$ tpl './src/**' ./dist -- --name='My Name' --target='Target'
+		$ tpl ./src/** ./dist -- --name='My Name' --target='Target'
+		$ tpl './src/** ./dist --data=prop.json -- --name-overwrite='My Name' --target-overwrite='Target'
+`, {
+	'--': true
 })
 
-if (dataFile) {
-	cli.flags = Object.assign(JSON.parse(fs.readFileSync(dataFile)), cli.flags)
+const readDataJSON = json => JSON.parse(fs.readFileSync(json))
+
+const job = new PQueue({concurrency: 4})
+const dest = cli.input.pop()
+const src = cli.input
+let data = {}
+
+// Using minimist parse code
+// https://github.com/substack/minimist/blob/master/index.js#L97
+cli.flags[''].forEach(d => {
+	if (/^--.+=/.test(d)) {
+		const m = d.match(/^--([^=]+)=([\s\S]*)$/)
+		data[m[1]] = camelcase(m[2])
+	}
+})
+
+// read data json first, then assign by passed data string
+data = Object.assign(cli.flags.data ? readDataJSON(cli.flags.data) : {}, data)
+
+// check parameters
+if (src.length < 1) {
+	throw new TypeError('Invalid source path')
+} else if (!dest) {
+	throw new TypeError('Invalid destination path')
+} else if (Object.keys(data).length <= 0) {
+	throw new TypeError('Invalid data properties')
 }
 
 globby(src).then(paths => {
@@ -51,15 +74,16 @@ globby(src).then(paths => {
 		if (!fs.lstatSync(p).isFile()) {
 			return
 		}
-
 		const output = path.join(dest, p)
 		const compile = () => fs.readFile(p).then(t => {
 			const compiled = template(t)
-			return compiled(cli.flags)
+			return compiled(data)
 		})
+
 		const write = content => makeDir(path.dirname(output)).then(() => {
 			return fs.writeFile(output, content)
 		})
+
 		job.add(() => compile().then(write))
 	})
 })
