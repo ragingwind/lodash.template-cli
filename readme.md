@@ -1,4 +1,4 @@
-# lodash-template-cli [![Build Status](https://travis-ci.org/ragingwind/lodash-template-cli.svg?branch=master)](https://travis-ci.org/ragingwind/lodash-template-cli)
+# ltpl-cli [![Build Status](https://travis-ci.org/ragingwind/ltpl-cli.svg?branch=master)](https://travis-ci.org/ragingwind/ltpl-cli)
 
 > Simple CLI for template using loadsh.template engine
 
@@ -6,13 +6,13 @@
 ## Install
 
 ```
-$ npm install -g lodash-template-cli
+$ npm install -g ltpl-cli
 ```
 
 ## Usage
 
 ```sh
-tpl --help
+ltpl --help
 ```
 
 ## License

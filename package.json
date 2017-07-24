@@ -1,16 +1,16 @@
 {
-  "name": "lodash-template-cli",
+  "name": "ltpl-cli",
   "version": "0.1.0",
   "description": "CLI for template of loadsh",
   "license": "MIT",
-  "repository": "ragingwind/lodash-template-cli",
+  "repository": "ragingwind/ltpl-cli",
   "author": {
     "name": "Jimmy Moon",
     "email": "ragingwind@gmail.com",
     "url": "ragingwind.me"
   },
   "bin": {
-    "tpl": "cli.js"
+    "ltpl": "cli.js"
   },
   "engines": {
     "node": ">=6"

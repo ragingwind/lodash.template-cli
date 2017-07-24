@@ -13,15 +13,15 @@ const makeDir = require('make-dir')
 
 const cli = meow(`
 	Usage
-		$ tpl [src] [dest] [data-props.json] <data-options>
+		$ ltpl [src] [dest] [data-props.json] <data-options>
 
 	Data Options
 		--anyVariableForTemplate
 
 	Examples
-		$ tpl ./src ./dist --name='My Name' --target='Target'
-		$ tpl ./src ./dist ./variables.json
-		$ tpl ./src ./dist ./variables.json --name-overwrite='My Name' --target-overwrite='Target'
+		$ ltpl ./src ./dist --name='My Name' --target='Target'
+		$ ltpl ./src ./dist ./variables.json
+		$ ltpl ./src ./dist ./variables.json --name-overwrite='My Name' --target-overwrite='Target'
 `)
 
 if (cli.input.length < 1) {
