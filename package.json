@@ -1,9 +1,9 @@
 {
-  "name": "lodash-tpl-cli",
+  "name": "lodash.template-cli",
   "version": "0.3.0",
   "description": "CLI for template of loadsh",
   "license": "MIT",
-  "repository": "ragingwind/lodash-tpl-cli",
+  "repository": "ragingwind/lodash.template-cli",
   "author": {
     "name": "Jimmy Moon",
     "email": "ragingwind@gmail.com",
