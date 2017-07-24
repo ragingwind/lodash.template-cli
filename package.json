@@ -1,6 +1,6 @@
 {
   "name": "lodash-template-cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "CLI for template of loadsh",
   "license": "MIT",
   "repository": "ragingwind/lodash-template-cli",
@@ -10,8 +10,8 @@
     "url": "ragingwind.me"
   },
   "bin": {
-		"tpl": "cli.js"
-	},
+    "tpl": "cli.js"
+  },
   "engines": {
     "node": ">=6"
   },
@@ -24,9 +24,9 @@
   "keywords": [
     "cli-app",
     "cli",
-		"lodash",
-		"tempalte",
-		"lodash.tempalte"
+    "lodash",
+    "tempalte",
+    "lodash.tempalte"
   ],
   "dependencies": {
     "globby": "^6.1.0",
@@ -44,9 +44,9 @@
     "xo": "^0.18.2"
   },
   "xo": {
-		"semicolon": false,
-		"rules": {
-			"capitalized-comments": 0
-		}
+    "semicolon": false,
+    "rules": {
+      "capitalized-comments": 0
+    }
   }
 }
