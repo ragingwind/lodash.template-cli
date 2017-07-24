@@ -6,7 +6,7 @@
 ## Install
 
 ```
-$ npm install lodash-template-cli
+$ npm install -g lodash-template-cli
 ```
 
 ## Usage
