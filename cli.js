@@ -30,8 +30,8 @@ const cli = meow(`
 	Please visit to https://github.com/ragingwind/node-module-boilerplate-with-ts for more examples
 `, {
 	alias: {
-		'c': 'config'
-	}
+		c: 'config'
+	},
 	'--': true
 })
 
