@@ -14,25 +14,20 @@ const camelcase = require('camelcase')
 
 const cli = meow(`
 	Usage
-		$ tpl [src] [dest] <data-json> -- [data-strings]
+		$ tpl [src w/ glob pattern] [dest] <options> -- [props]
 
-	src, path, path with glob pattern and glob patterns
-		eg) ./src/index.tpl, ./src/**, './src/**'
+	Options
+		--config, -c			path of json file predefined prop. 'optional'
 
-	dest, path for output
-		eg) ./dist
-
-	data-json, 'optional, has data properties, must be before '--'
-		--data='path of data.json'
-
-	data-string, must be after '--', individual data property
+	Props, must be followed after '--', individual data property, camelcase is default
 		--ANY-DATA-STRING-NAME=[value]
 
 	Examples
 		$ tpl ./src/index.html ./dist -- --name='My Name' --target='Target'
 		$ tpl './src/**' ./dist -- --name='My Name' --target='Target'
-		$ tpl ./src/** ./dist -- --name='My Name' --target='Target'
-		$ tpl './src/** ./dist --data=prop.json -- --name-overwrite='My Name' --target-overwrite='Target'
+		$ tpl './src/** ./dist --config=prop.json
+
+	Please visit to https://github.com/ragingwind/node-module-boilerplate-with-ts for more examples
 `, {
 	'--': true
 })
@@ -49,12 +44,12 @@ let data = {}
 cli.flags[''].forEach(d => {
 	if (/^--.+=/.test(d)) {
 		const m = d.match(/^--([^=]+)=([\s\S]*)$/)
-		data[m[1]] = camelcase(m[2])
+		data[camelcase(m[1])] = m[2]
 	}
 })
 
 // read data json first, then assign by passed data string
-data = Object.assign(cli.flags.data ? readDataJSON(cli.flags.data) : {}, data)
+data = Object.assign(cli.flags.config ? readDataJSON(cli.flags.config) : {}, data)
 
 // check parameters
 if (src.length < 1) {

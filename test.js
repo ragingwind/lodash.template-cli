@@ -15,12 +15,12 @@ test(async t => {
 
 	t.true(result.toString() === 'hello jimmy!\n')
 
-	await execa('./cli.js', ['./fixtures/template/**', './dist', '--data=./fixtures/data.json'])
+	await execa('./cli.js', ['./fixtures/template/**', './dist', '--config=./fixtures/config.json'])
 	result = await fs.readFile('./dist/fixtures/template/index.html')
 
 	t.true(result.toString() === 'hello moon!\n')
 
-	await execa('./cli.js', ['./fixtures/template/**', './dist', '--data=./fixtures/data.json', '--', '--user=jimmymoon'])
+	await execa('./cli.js', ['./fixtures/template/**', './dist', '--config=./fixtures/config.json', '--', '--user=jimmymoon'])
 	result = await fs.readFile('./dist/fixtures/template/index.html')
 
 	t.true(result.toString() === 'hello jimmymoon!\n')
