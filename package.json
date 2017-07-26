@@ -1,6 +1,6 @@
 {
   "name": "lodash.template-cli",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "CLI for template of loadsh",
   "license": "MIT",
   "repository": "ragingwind/lodash.template-cli",
