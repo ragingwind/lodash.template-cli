@@ -41,7 +41,7 @@
   "devDependencies": {
     "ava": "^0.19.1",
     "execa": "^0.7.0",
-    "rimraf": "^2.6.1",
+    "rimraf-promise": "^2.0.0",
     "xo": "^0.18.2"
   },
   "xo": {

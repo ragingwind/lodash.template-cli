@@ -18,6 +18,7 @@ const cli = meow(`
 
 	Options
 		--config, -c			path of json file predefined prop. 'optional'
+		--overwrite, -o		overwrite its contents
 
 	Props, must be followed after '--', individual data property, camelcase is default
 		--ANY-DATA-STRING-NAME=[value]
@@ -26,11 +27,13 @@ const cli = meow(`
 		$ tpl ./src/index.html ./dist -- --name='My Name' --target='Target'
 		$ tpl './src/**' ./dist -- --name='My Name' --target='Target'
 		$ tpl './src/** ./dist --config=prop.json
+		$ tpl './src/** --config=prop.json
 
 	Please visit to https://github.com/ragingwind/node-module-boilerplate-with-ts for more examples
 `, {
 	alias: {
-		c: 'config'
+		c: 'config',
+		o: 'overwrite'
 	},
 	'--': true
 })
@@ -57,14 +60,14 @@ data = Object.assign(cli.flags.config ? readDataJSON(cli.flags.config) : {}, dat
 // check parameters
 if (src.length < 1) {
 	throw new TypeError('Invalid source path')
-} else if (!dest) {
+} else if (!cli.flags.overwrite && !dest) {
 	throw new TypeError('Invalid destination path')
 } else if (Object.keys(data).length <= 0) {
 	throw new TypeError('Invalid data properties')
 }
 
 globby(src).then(paths => {
-	if (isPathInside(paths[0], dest)) {
+	if (!cli.flags.overwrite && isPathInside(paths[0], dest)) {
 		throw new TypeError('Invalid destination, it should be out of source path')
 	}
 
@@ -72,7 +75,8 @@ globby(src).then(paths => {
 		if (!fs.lstatSync(p).isFile()) {
 			return
 		}
-		const output = path.join(dest, p)
+
+		const output = cli.flags.overwrite ? p : path.join(dest, p)
 		const compile = () => fs.readFile(p).then(t => {
 			const compiled = template(t)
 			return compiled(data)

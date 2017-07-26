@@ -1,11 +1,13 @@
 import path from 'path'
 import test from 'ava'
 import execa from 'execa'
-import rimraf from 'rimraf'
+import rimraf from 'rimraf-promise'
 import fs from 'mz/fs'
 
-test.before('cleanup target path', () => {
-	rimraf.sync('./dist')
+test.before('cleanup target path', async () => {
+	await rimraf('./dist')
+	await fs.mkdir('./dist')
+	await fs.writeFile('./dist/index.html', await fs.readFile('./fixtures/template/index.html'))
 })
 
 const run = async (src, target, options, content) => {
@@ -34,12 +36,22 @@ test('config', async t => {
 	t.true(result)
 })
 
-test('overwrite', async t => {
+test('overwrite props', async t => {
 	const result = await run(
 		'./fixtures/template/index.html',
-		'./dist/overwrite',
+		'./dist/overwrite-props',
 		['--config=./fixtures/config.json', '--', '--user=jimmymoon'],
 		'hello jimmymoon!\n'
+	)
+	t.true(result)
+})
+
+test('overwrite file', async t => {
+	const result = await run(
+		'./dist/index.html',
+		'',
+		['--overwrite', '--', '--user=jimmymoon-overwrited'],
+		'hello jimmymoon-overwrited!\n'
 	)
 	t.true(result)
 })
