@@ -66,11 +66,11 @@ if (src.length < 1) {
 	throw new TypeError('Invalid data properties')
 }
 
-globby(src).then(paths => {
-	if (!cli.flags.overwrite && isPathInside(paths[0], dest)) {
-		throw new TypeError('Invalid destination, it should be out of source path')
-	}
+if (!cli.flags.overwrite && isPathInside(path.resolve(src[0]), dest)) {
+	throw new TypeError('Invalid destination, it should be out of source path')
+}
 
+globby(src).then(paths => {
 	paths.forEach(p => {
 		if (!fs.lstatSync(p).isFile()) {
 			return

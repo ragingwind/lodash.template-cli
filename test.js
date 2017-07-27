@@ -55,3 +55,20 @@ test('overwrite file', async t => {
 	)
 	t.true(result)
 })
+
+test('inside path', async t => {
+	let _err
+
+	try {
+		await run(
+			'./dist/index.html',
+			'./',
+			['--', '--user=jimmymoon-overwrited'],
+			'hello jimmymoon-overwrited!\n'
+		)
+	} catch (err) {
+		_err = err
+	}
+
+	t.true(_err !== undefined)
+})
